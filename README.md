@@ -79,10 +79,13 @@ chaos_code/
 │   ├── file_edit.py         # 文件编辑
 │   ├── glob.py              # 文件搜索
 │   └── grep.py              # 内容搜索
-├── permission/              # 权限系统 [OpenCode + Gemini CLI 参考] ✅ 新增
+├── permission/              # 权限系统 [OpenCode + Gemini CLI 参考]
 │   ├── rules.py             # 权限规则模型
 │   └── manager.py           # 权限管理器
-├── mcp/                     # MCP 协议 [MS-Agent 参考，待实现]
+├── mcp/                     # MCP 协议 [Anthropic MCP 规范] ✅ 新增
+│   ├── protocol.py          # 协议数据模型
+│   ├── client.py            # MCP 客户端
+│   └── adapter.py           # 工具适配器
 ├── session/                 # 会话管理 [待实现]
 ├── tui/                     # TUI 界面 [原创选型，待实现]
 ├── config/                  # 配置系统 [原创选型]
@@ -117,7 +120,13 @@ chaos_code/
   - [x] Plan 模式只读权限
   - [x] 测试用例（30 个测试通过）
 
-- [ ] **阶段三：MCP 协议支持**
+- [x] **阶段三：MCP 协议支持** ✅ (2026-03-08)
+  - [x] MCP 协议数据模型（JSON-RPC 2.0）
+  - [x] MCP 客户端（Stdio/HTTP 传输）
+  - [x] MCP 工具适配器
+  - [x] 多服务器管理
+  - [x] 测试用例（42 个测试通过）
+
 - [ ] **阶段四：TUI 界面**
 - [ ] **阶段五：高级功能**
 
