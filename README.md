@@ -2,16 +2,20 @@
 
 一个基于 Python 的 AI 辅助编程 CLI 工具，借鉴 OpenCode、Gemini CLI、MS-Agent 三个优秀开源项目的精华设计。
 
-## 项目定位
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-- **语言**: Python 3.8+
-- **界面**: CLI + TUI (Terminal User Interface)
-- **架构**: 模块化、可扩展
-- **核心功能**: 代码编辑、文件操作、终端执行、LLM 集成、MCP 协议支持
+## ✨ 核心特性
 
-## 快速开始
+- 🤖 **智能 Agent**: 支持 build（全功能）和 plan（只读规划）两种模式
+- 🛠️ **丰富工具**: 内置 bash、read、write、edit、glob、grep 等工具
+- 🔐 **权限系统**: 三级权限控制，危险操作交互式确认
+- 🔌 **MCP 协议**: 支持 Anthropic Model Context Protocol
+- 💻 **TUI 界面**: 基于 Textual 的现代化终端界面
+- 💾 **会话管理**: 会话持久化、历史浏览
+- 🧠 **记忆系统**: 短期/长期/项目级三级记忆
 
-### 安装
+## 📦 安装
 
 ```bash
 # 从源码安装（开发模式）
@@ -20,27 +24,7 @@ cd chaos-code
 pip install -e .
 ```
 
-### 基本使用
-
-```bash
-# 查看版本
-chaos-code --version
-
-# 查看帮助
-chaos-code --help
-
-# 与 Agent 对话
-chaos-code chat "帮我创建一个 Python 项目结构"
-
-# 交互模式
-chaos-code repl
-
-# 指定模型
-chaos-code chat "分析这个项目" -m openai/qwen-max
-
-# 只读规划模式
-chaos-code chat "分析代码结构" --mode plan
-```
+## 🚀 快速开始
 
 ### 环境配置
 
@@ -65,98 +49,234 @@ CHAOS_CODE_DEFAULT_MODEL=openai/qwen-plus
 - Anthropic: `claude-3-opus-20240229`, `claude-3-sonnet-20240229`
 - DeepSeek: `deepseek/deepseek-chat`
 
-## 项目结构
+### 基本使用
+
+```bash
+# 查看版本
+chaos-code --version
+
+# 查看帮助
+chaos-code --help
+
+# 单次对话
+chaos-code chat "帮我创建一个 Python 项目结构"
+
+# 只读规划模式
+chaos-code chat "分析代码结构" --mode plan
+
+# 自动确认所有操作
+chaos-code chat "删除临时文件" -y
+
+# 交互式 REPL
+chaos-code repl
+
+# TUI 界面
+chaos-code tui
+```
+
+## 📖 使用指南
+
+### CLI 命令
+
+#### chat - 单次对话
+
+```bash
+# 基本用法
+chaos-code chat "你的问题"
+
+# 指定模型
+chaos-code chat "分析这个项目" -m gpt-4o
+
+# 指定模式 (build/plan)
+chaos-code chat "分析代码结构" --mode plan
+
+# 自动确认
+chaos-code chat "执行操作" -y
+```
+
+#### repl - 交互式 REPL
+
+```bash
+chaos-code repl
+
+# REPL 内命令
+/help    # 显示帮助
+/clear   # 清除对话历史
+/exit    # 退出
+```
+
+#### tui - 终端界面
+
+```bash
+chaos-code tui
+
+# 快捷键
+Ctrl+Q   # 退出
+Ctrl+L   # 清屏
+Ctrl+N   # 新会话
+F1       # 帮助
+```
+
+### Agent 模式
+
+| 模式 | 说明 | 权限 |
+|------|------|------|
+| `build` | 全功能模式 | 允许所有操作（危险操作需确认） |
+| `plan` | 只读规划模式 | 仅允许读取，禁止写入和执行 |
+
+### 权限系统
+
+系统内置三级权限：
+
+| 级别 | 说明 |
+|------|------|
+| `allow` | 允许执行，无需确认 |
+| `deny` | 禁止执行 |
+| `confirm` | 需要用户确认后执行 |
+
+默认规则：
+- 读取操作 → 允许
+- 写入操作 → 需确认
+- 危险命令（rm -rf 等）→ 需确认
+
+### MCP 配置
+
+创建 `mcp.json` 文件：
+
+```json
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/path/to/files"]
+    },
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_TOKEN": "your-token"
+      }
+    }
+  }
+}
+```
+
+设置环境变量：
+```bash
+CHAOS_CODE_MCP_CONFIG_PATH=mcp.json
+```
+
+## 🏗️ 项目结构
 
 ```
 chaos_code/
-├── cli/                     # CLI 命令 [原创选型: typer + rich]
-├── agent/                   # Agent 核心 [OpenCode 参考]
-├── llm/                     # LLM 集成 [MS-Agent 参考]
-├── tools/                   # 工具系统 [OpenCode 参考]
+├── cli/                     # CLI 命令
+├── agent/                   # Agent 核心
+├── llm/                     # LLM 集成
+├── tools/                   # 工具系统
 │   ├── bash.py              # 终端命令执行
 │   ├── file_read.py         # 文件读取
 │   ├── file_write.py        # 文件写入
 │   ├── file_edit.py         # 文件编辑
 │   ├── glob.py              # 文件搜索
 │   └── grep.py              # 内容搜索
-├── permission/              # 权限系统 [OpenCode + Gemini CLI 参考]
-│   ├── rules.py             # 权限规则模型
-│   └── manager.py           # 权限管理器
-├── mcp/                     # MCP 协议 [Anthropic MCP 规范]
-│   ├── protocol.py          # 协议数据模型
-│   ├── client.py            # MCP 客户端
-│   └── adapter.py           # 工具适配器
-├── tui/                     # TUI 界面 [原创选型: textual]
-│   └── app.py               # TUI 应用
-├── session/                 # 会话管理 [MS-Agent 参考] ✅ 新增
-│   ├── manager.py           # 会话管理器
-│   └── memory.py            # 记忆系统
-├── config/                  # 配置系统 [原创选型]
+├── permission/              # 权限系统
+├── mcp/                     # MCP 协议
+├── tui/                     # TUI 界面
+├── session/                 # 会话管理
+├── config/                  # 配置系统
 └── utils/                   # 工具函数
 ```
 
-## 参考项目
+## 🔧 高级用法
 
-| 项目 | 语言 | 借鉴要点 |
-|------|------|----------|
-| **[OpenCode]** | TypeScript/Bun | Agent 架构、工具系统、权限系统、build/plan 模式 |
-| **[Gemini CLI]** | TypeScript | 工具确认机制、Subagent 架构、Schema 验证 |
-| **[MS-Agent]** | Python | MCP 协议、多 LLM 后端、Memory 系统 |
+### 会话管理
 
-详细的参考来源标注请参阅: [参考来源文档](docs/01_Design/Reference_Sources.md)
+```python
+from chaos_code.session import SessionManager
 
-## 开发进度
+manager = SessionManager()
 
-- [x] **阶段一：MVP 核心功能** ✅ (2026-03-08)
-  - [x] 项目结构和 CLI 入口
-  - [x] LLM 集成模块（litellm 后端）
-  - [x] 工具系统（bash, read, write, edit, glob, grep）
-  - [x] Agent 核心（CodingAgent, PlannerAgent）
-  - [x] REPL 交互模式
-  - [x] 配置系统（.env 支持）
-  - [x] 测试用例（15 个测试通过）
+# 创建会话
+session = manager.create_session(name="开发讨论")
 
-- [x] **阶段二：权限与安全系统** ✅ (2026-03-08)
-  - [x] 权限规则模型（PermissionRule, PermissionLevel）
-  - [x] 权限管理器（PermissionManager）
-  - [x] 交互式确认机制
-  - [x] Plan 模式只读权限
-  - [x] 测试用例（30 个测试通过）
+# 添加消息
+session.add_message("user", "帮我分析项目")
 
-- [x] **阶段三：MCP 协议支持** ✅ (2026-03-08)
-  - [x] MCP 协议数据模型（JSON-RPC 2.0）
-  - [x] MCP 客户端（Stdio/HTTP 传输）
-  - [x] MCP 工具适配器
-  - [x] 多服务器管理
-  - [x] 测试用例（42 个测试通过）
+# 保存会话
+manager.save_session(session)
 
-- [x] **阶段四：TUI 界面** ✅ (2026-03-08)
-  - [x] Textual TUI 应用框架
-  - [x] 聊天界面布局
-  - [x] 快捷键和命令支持
-  - [x] CLI 命令集成
-  - [x] 测试用例（51 个测试通过）
+# 列出历史会话
+sessions = manager.list_sessions()
+```
 
-- [x] **阶段五：高级功能** ✅ (2026-03-08)
-  - [x] 会话管理（持久化、历史浏览）
-  - [x] 记忆系统（短期/长期/项目级）
-  - [x] 测试用例（72 个测试通过）
+### 记忆系统
 
-## 测试
+```python
+from chaos_code.session import MemoryManager, MemoryType
+
+memory = MemoryManager()
+
+# 添加长期记忆
+memory.remember(
+    "用户偏好使用 Python 开发",
+    memory_type=MemoryType.LONG_TERM,
+    importance=8,
+    tags=["preference", "language"],
+)
+
+# 搜索记忆
+results = memory.recall("Python")
+
+# 获取 Agent 上下文
+context = memory.get_context_for_agent()
+```
+
+### 自定义工具
+
+```python
+from chaos_code.tools.base import ToolBase, ToolContext, ToolResult
+
+class MyTool(ToolBase):
+    name = "my_tool"
+    description = "自定义工具"
+    parameters_schema = {
+        "type": "object",
+        "properties": {
+            "input": {"type": "string"}
+        },
+        "required": ["input"]
+    }
+
+    async def execute(self, params: dict, context: ToolContext) -> ToolResult:
+        return ToolResult(success=True, output="结果")
+```
+
+## 🧪 测试
 
 ```bash
 # 运行测试
 pytest tests/ -v
 
-# 安装开发依赖
-pip install -e ".[dev]"
+# 带覆盖率
+pytest tests/ --cov=chaos_code
 ```
 
-## 文档
+## 📚 文档
 
-- [开发计划文档](docs/00_TODO/0.1_ChaosCode_Development_Plan.md)
-- [参考来源标注](docs/01_Design/Reference_Sources.md)
+- [开发文档](docs/DEVELOPMENT.md) - 详细的架构和开发指南
+- [亮点文档](docs/HIGHLIGHTS.md) - 项目技术亮点
 
-## 许可证
+## 🙏 致谢
 
-MIT
+本项目借鉴了以下优秀项目的设计：
+
+| 项目 | 借鉴要点 |
+|------|----------|
+| [OpenCode](https://github.com/opencode-ai/opencode) | Agent 架构、工具系统、权限系统、build/plan 模式 |
+| [Gemini CLI](https://github.com/google-gemini/gemini-cli) | 工具确认机制、Subagent 架构 |
+| [MS-Agent](https://github.com/microsoft/autogen) | MCP 协议、多 LLM 后端、Memory 系统 |
+
+## 📄 许可证
+
+MIT License
