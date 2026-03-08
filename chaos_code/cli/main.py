@@ -257,5 +257,32 @@ def _print_help() -> None:
     console.print(Markdown(help_text))
 
 
+@app.command()
+def tui(
+    model: str = typer.Option(None, "--model", "-m", help="使用的模型"),
+    mode: str = typer.Option(
+        None,
+        "--mode",
+        "-M",
+        help="Agent 模式: build(全功能) / plan(只读规划)",
+    ),
+) -> None:
+    """
+    启动 TUI 界面
+
+    [原创选型: textual TUI 框架]
+
+    示例:
+        chaos-code tui
+        chaos-code tui -m gpt-4o --mode build
+    """
+    from chaos_code.tui import run_tui
+
+    model = model or settings.default_model
+    mode = mode or settings.default_mode
+
+    run_tui(model=model, mode=mode)
+
+
 if __name__ == "__main__":
     app()

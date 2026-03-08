@@ -82,12 +82,13 @@ chaos_code/
 ├── permission/              # 权限系统 [OpenCode + Gemini CLI 参考]
 │   ├── rules.py             # 权限规则模型
 │   └── manager.py           # 权限管理器
-├── mcp/                     # MCP 协议 [Anthropic MCP 规范] ✅ 新增
+├── mcp/                     # MCP 协议 [Anthropic MCP 规范]
 │   ├── protocol.py          # 协议数据模型
 │   ├── client.py            # MCP 客户端
 │   └── adapter.py           # 工具适配器
+├── tui/                     # TUI 界面 [原创选型: textual] ✅ 新增
+│   └── app.py               # TUI 应用
 ├── session/                 # 会话管理 [待实现]
-├── tui/                     # TUI 界面 [原创选型，待实现]
 ├── config/                  # 配置系统 [原创选型]
 └── utils/                   # 工具函数
 ```
@@ -127,7 +128,13 @@ chaos_code/
   - [x] 多服务器管理
   - [x] 测试用例（42 个测试通过）
 
-- [ ] **阶段四：TUI 界面**
+- [x] **阶段四：TUI 界面** ✅ (2026-03-08)
+  - [x] Textual TUI 应用框架
+  - [x] 聊天界面布局
+  - [x] 快捷键和命令支持
+  - [x] CLI 命令集成
+  - [x] 测试用例（51 个测试通过）
+
 - [ ] **阶段五：高级功能**
 
 ## 测试
