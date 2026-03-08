@@ -86,9 +86,11 @@ chaos_code/
 │   ├── protocol.py          # 协议数据模型
 │   ├── client.py            # MCP 客户端
 │   └── adapter.py           # 工具适配器
-├── tui/                     # TUI 界面 [原创选型: textual] ✅ 新增
+├── tui/                     # TUI 界面 [原创选型: textual]
 │   └── app.py               # TUI 应用
-├── session/                 # 会话管理 [待实现]
+├── session/                 # 会话管理 [MS-Agent 参考] ✅ 新增
+│   ├── manager.py           # 会话管理器
+│   └── memory.py            # 记忆系统
 ├── config/                  # 配置系统 [原创选型]
 └── utils/                   # 工具函数
 ```
@@ -135,7 +137,10 @@ chaos_code/
   - [x] CLI 命令集成
   - [x] 测试用例（51 个测试通过）
 
-- [ ] **阶段五：高级功能**
+- [x] **阶段五：高级功能** ✅ (2026-03-08)
+  - [x] 会话管理（持久化、历史浏览）
+  - [x] 记忆系统（短期/长期/项目级）
+  - [x] 测试用例（72 个测试通过）
 
 ## 测试
 
