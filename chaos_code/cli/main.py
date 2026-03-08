@@ -66,6 +66,12 @@ def chat(
         help="Agent 模式: build(全功能) / plan(只读规划) [OpenCode 参考]",
     ),
     max_turns: int = typer.Option(None, "--max-turns", "-t", help="最大对话轮数"),
+    auto_confirm: bool = typer.Option(
+        False,
+        "--yes",
+        "-y",
+        help="自动确认所有操作（跳过权限确认）",
+    ),
 ) -> None:
     """
     与 Coding Agent 对话
@@ -74,9 +80,11 @@ def chat(
         chaos-code chat "帮我创建一个 Python 项目结构"
         chaos-code chat "读取 README.md 并添加使用说明" -m claude-3-opus
         chaos-code chat "分析代码结构" --mode plan
+        chaos-code chat "删除临时文件" -y  # 自动确认
     """
     from chaos_code.agent import CodingAgent, PlannerAgent
     from chaos_code.llm import create_llm
+    from chaos_code.permission import create_default_manager, PermissionLevel, PermissionConfig
     from chaos_code.tools import default_tools
 
     # 从配置读取默认值
@@ -101,10 +109,19 @@ def chat(
     )
     tools = default_tools()
 
+    # 创建权限管理器
+    if auto_confirm or settings.auto_confirm:
+        # 自动确认模式：创建一个允许所有操作的权限管理器
+        from chaos_code.permission import PermissionManager
+        config = PermissionConfig(default_level=PermissionLevel.ALLOW)
+        permission_manager = PermissionManager(config=config)
+    else:
+        permission_manager = create_default_manager()
+
     if mode == "plan":
         agent = PlannerAgent(llm, tools, max_turns=max_turns)
     else:
-        agent = CodingAgent(llm, tools, max_turns=max_turns)
+        agent = CodingAgent(llm, tools, max_turns=max_turns, permission_manager=permission_manager)
 
     # 运行 Agent
     async def run() -> None:

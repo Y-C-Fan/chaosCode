@@ -79,8 +79,10 @@ chaos_code/
 │   ├── file_edit.py         # 文件编辑
 │   ├── glob.py              # 文件搜索
 │   └── grep.py              # 内容搜索
+├── permission/              # 权限系统 [OpenCode + Gemini CLI 参考] ✅ 新增
+│   ├── rules.py             # 权限规则模型
+│   └── manager.py           # 权限管理器
 ├── mcp/                     # MCP 协议 [MS-Agent 参考，待实现]
-├── permission/              # 权限系统 [OpenCode 参考，待实现]
 ├── session/                 # 会话管理 [待实现]
 ├── tui/                     # TUI 界面 [原创选型，待实现]
 ├── config/                  # 配置系统 [原创选型]
@@ -108,7 +110,13 @@ chaos_code/
   - [x] 配置系统（.env 支持）
   - [x] 测试用例（15 个测试通过）
 
-- [ ] **阶段二：权限与安全系统**
+- [x] **阶段二：权限与安全系统** ✅ (2026-03-08)
+  - [x] 权限规则模型（PermissionRule, PermissionLevel）
+  - [x] 权限管理器（PermissionManager）
+  - [x] 交互式确认机制
+  - [x] Plan 模式只读权限
+  - [x] 测试用例（30 个测试通过）
+
 - [ ] **阶段三：MCP 协议支持**
 - [ ] **阶段四：TUI 界面**
 - [ ] **阶段五：高级功能**

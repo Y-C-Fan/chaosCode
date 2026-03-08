@@ -8,6 +8,7 @@ from typing import Optional
 
 from chaos_code.agent.base import Agent, AgentMode
 from chaos_code.llm import LLM
+from chaos_code.permission import PermissionManager
 from chaos_code.tools import ToolRegistry
 
 
@@ -28,6 +29,7 @@ class CodingAgent(Agent):
         tools: ToolRegistry,
         max_turns: int = 20,
         system_prompt: Optional[str] = None,
+        permission_manager: Optional[PermissionManager] = None,
     ) -> None:
         super().__init__(
             llm=llm,
@@ -35,6 +37,7 @@ class CodingAgent(Agent):
             max_turns=max_turns,
             mode=AgentMode.BUILD,
             system_prompt=system_prompt,
+            permission_manager=permission_manager,
         )
 
     def _get_default_system_prompt(self) -> str:

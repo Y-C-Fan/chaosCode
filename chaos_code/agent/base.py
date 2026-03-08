@@ -11,6 +11,7 @@ from enum import Enum
 from typing import AsyncGenerator, Dict, List, Optional
 
 from chaos_code.llm import LLM, LLMResponse, Message
+from chaos_code.permission import PermissionManager, PermissionLevel, create_default_manager
 from chaos_code.tools import ToolRegistry
 from chaos_code.tools.base import ToolContext
 
@@ -48,6 +49,7 @@ class Agent(ABC):
         max_turns: int = 20,
         mode: AgentMode = AgentMode.BUILD,
         system_prompt: Optional[str] = None,
+        permission_manager: Optional[PermissionManager] = None,
     ) -> None:
         self.llm = llm
         self.tools = tools
@@ -59,6 +61,9 @@ class Agent(ABC):
 
         # 创建工具上下文
         self.context = ToolContext()
+
+        # 权限管理器
+        self.permission_manager = permission_manager or create_default_manager()
 
     @property
     def system_prompt(self) -> str:
@@ -157,11 +162,40 @@ class Agent(ABC):
                 is_error=True,
             )
 
-        # 检查是否需要确认 [Gemini CLI 参考]
-        if tool.should_confirm(tool_call.arguments):
-            # AIDEV-NOTE: 确认机制待实现，目前默认执行
-            # 未来可以添加交互式确认
-            pass
+        # 权限检查
+        decision = self.permission_manager.check_permission(
+            tool_call.name,
+            tool_call.arguments,
+        )
+
+        # 如果被拒绝
+        if decision.is_denied:
+            return Message.tool_result(
+                tool_call_id=tool_call.id,
+                content=f"操作被拒绝: {decision.reason}",
+                is_error=True,
+                name=tool_call.name,
+            )
+
+        # 如果需要确认
+        if decision.needs_confirmation:
+            # 获取操作描述
+            description = tool.get_description(tool_call.arguments)
+
+            # 请求确认
+            decision = await self.permission_manager.request_confirmation(
+                tool_call.name,
+                tool_call.arguments,
+                description,
+            )
+
+            if decision.is_denied:
+                return Message.tool_result(
+                    tool_call_id=tool_call.id,
+                    content=f"用户拒绝操作: {decision.reason}",
+                    is_error=True,
+                    name=tool_call.name,
+                )
 
         # 执行工具
         result = await tool.execute(tool_call.arguments, self.context)

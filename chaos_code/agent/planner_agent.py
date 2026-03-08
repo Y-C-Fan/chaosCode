@@ -8,6 +8,7 @@ from typing import Optional
 
 from chaos_code.agent.base import Agent, AgentMode
 from chaos_code.llm import LLM
+from chaos_code.permission import PermissionManager, PermissionLevel, PermissionRule
 from chaos_code.tools import ToolRegistry
 
 
@@ -28,14 +29,52 @@ class PlannerAgent(Agent):
         tools: ToolRegistry,
         max_turns: int = 20,
         system_prompt: Optional[str] = None,
+        permission_manager: Optional[PermissionManager] = None,
     ) -> None:
+        # 如果没有提供权限管理器，创建只读权限管理器
+        if permission_manager is None:
+            permission_manager = self._create_readonly_permission_manager()
+
         super().__init__(
             llm=llm,
             tools=tools,
             max_turns=max_turns,
             mode=AgentMode.PLAN,
             system_prompt=system_prompt,
+            permission_manager=permission_manager,
         )
+
+    @staticmethod
+    def _create_readonly_permission_manager() -> PermissionManager:
+        """
+        创建只读权限管理器
+
+        Planner 模式只允许读取操作，禁止写入和执行
+
+        Returns:
+            PermissionManager: 只读权限管理器
+        """
+        from chaos_code.permission import PermissionConfig
+
+        rules = [
+            # 读取操作允许
+            PermissionRule(
+                name="允许读取",
+                level=PermissionLevel.ALLOW,
+                tools=["read", "glob", "grep"],
+                priority=100,
+            ),
+            # 其他操作拒绝
+            PermissionRule(
+                name="禁止写入和执行",
+                level=PermissionLevel.DENY,
+                tools=["write", "edit", "bash"],
+                priority=100,
+            ),
+        ]
+
+        config = PermissionConfig(rules=rules, default_level=PermissionLevel.DENY)
+        return PermissionManager(config=config)
 
     def _get_default_system_prompt(self) -> str:
         """获取默认系统提示"""
