@@ -1,37 +1,37 @@
 # ChaosCode
 
-An AI-powered coding assistant CLI tool built with Python, inspired by the best practices from OpenCode, Gemini CLI, and MS-Agent.
+一个基于 Python 的 AI 辅助编程 CLI 工具，借鉴 OpenCode、Gemini CLI、MS-Agent 三个优秀开源项目的精华设计。
 
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## ✨ Features
+## ✨ 核心特性
 
-- 🤖 **Intelligent Agent**: Build mode (full features) and Plan mode (read-only planning)
-- 🛠️ **Rich Tools**: Built-in bash, read, write, edit, glob, grep tools
-- 🔐 **Permission System**: Three-level permission control with interactive confirmation
-- 🔌 **MCP Protocol**: Full support for Anthropic Model Context Protocol
-- 💻 **TUI Interface**: Modern terminal interface powered by Textual
-- 💾 **Session Management**: Session persistence and history browsing
-- 🧠 **Memory System**: Short-term, long-term, and project-level memory
+- 🤖 **智能 Agent**: 支持 build（全功能）和 plan（只读规划）两种模式
+- 🛠️ **丰富工具**: 内置 bash、read、write、edit、glob、grep 等工具
+- 🔐 **权限系统**: 三级权限控制，危险操作交互式确认
+- 🔌 **MCP 协议**: 支持 Anthropic Model Context Protocol
+- 💻 **TUI 界面**: 基于 Textual 的现代化终端界面
+- 💾 **会话管理**: 会话持久化、历史浏览
+- 🧠 **记忆系统**: 短期/长期/项目级三级记忆
 
-## 📦 Installation
+## 📦 安装
 
 ```bash
-# Install from source (development mode)
-git clone https://github.com/chaos-code/chaos-code.git
-cd chaos-code
+# 从源码安装（开发模式）
+git clone https://github.com/Y-C-Fan/chaosCode.git
+cd chaosCode
 pip install -e .
 ```
 
-## 🚀 Quick Start
+## 🚀 快速开始
 
-### Configuration
+### 环境配置
 
-Create a `.env` file in the project root:
+在项目根目录创建 `.env` 文件：
 
 ```bash
-# Alibaba Cloud Tongyi Qianwen
+# 阿里云通义千问
 CHAOS_CODE_API_KEY=sk-xxx
 CHAOS_CODE_API_BASE=https://dashscope.aliyuncs.com/compatible-mode/v1
 CHAOS_CODE_DEFAULT_MODEL=openai/qwen-plus
@@ -43,105 +43,105 @@ CHAOS_CODE_DEFAULT_MODEL=openai/qwen-plus
 # ANTHROPIC_API_KEY=sk-ant-...
 ```
 
-Supported models:
-- Alibaba Tongyi: `openai/qwen-plus`, `openai/qwen-turbo`, `openai/qwen-max`
+支持的模型：
+- 阿里云通义千问: `openai/qwen-plus`, `openai/qwen-turbo`, `openai/qwen-max`
 - OpenAI: `gpt-4o`, `gpt-4o-mini`
 - Anthropic: `claude-3-opus-20240229`, `claude-3-sonnet-20240229`
 - DeepSeek: `deepseek/deepseek-chat`
 
-### Basic Usage
+### 基本使用
 
 ```bash
-# Show version
+# 查看版本
 chaos-code --version
 
-# Show help
+# 查看帮助
 chaos-code --help
 
-# Single chat
-chaos-code chat "Help me create a Python project structure"
+# 单次对话
+chaos-code chat "帮我创建一个 Python 项目结构"
 
-# Read-only planning mode
-chaos-code chat "Analyze code structure" --mode plan
+# 只读规划模式
+chaos-code chat "分析代码结构" --mode plan
 
-# Auto-confirm all operations
-chaos-code chat "Execute operations" -y
+# 自动确认所有操作
+chaos-code chat "删除临时文件" -y
 
-# Interactive REPL
+# 交互式 REPL
 chaos-code repl
 
-# TUI interface
+# TUI 界面
 chaos-code tui
 ```
 
-## 📖 Usage Guide
+## 📖 使用指南
 
-### CLI Commands
+### CLI 命令
 
-#### chat - Single Conversation
+#### chat - 单次对话
 
 ```bash
-# Basic usage
-chaos-code chat "Your question"
+# 基本用法
+chaos-code chat "你的问题"
 
-# Specify model
-chaos-code chat "Analyze this project" -m gpt-4o
+# 指定模型
+chaos-code chat "分析这个项目" -m gpt-4o
 
-# Specify mode (build/plan)
-chaos-code chat "Analyze code structure" --mode plan
+# 指定模式 (build/plan)
+chaos-code chat "分析代码结构" --mode plan
 
-# Auto-confirm
-chaos-code chat "Execute operation" -y
+# 自动确认
+chaos-code chat "执行操作" -y
 ```
 
-#### repl - Interactive Mode
+#### repl - 交互式 REPL
 
 ```bash
 chaos-code repl
 
-# Commands inside REPL
-/help    # Show help
-/clear   # Clear conversation history
-/exit    # Exit
+# REPL 内命令
+/help    # 显示帮助
+/clear   # 清除对话历史
+/exit    # 退出
 ```
 
-#### tui - Terminal Interface
+#### tui - 终端界面
 
 ```bash
 chaos-code tui
 
-# Keyboard shortcuts
-Ctrl+Q   # Quit
-Ctrl+L   # Clear screen
-Ctrl+N   # New session
-F1       # Help
+# 快捷键
+Ctrl+Q   # 退出
+Ctrl+L   # 清屏
+Ctrl+N   # 新会话
+F1       # 帮助
 ```
 
-### Agent Modes
+### Agent 模式
 
-| Mode | Description | Permissions |
-|------|-------------|-------------|
-| `build` | Full-featured mode | All operations allowed (dangerous ops need confirmation) |
-| `plan` | Read-only planning mode | Only read operations, no write/execute |
+| 模式 | 说明 | 权限 |
+|------|------|------|
+| `build` | 全功能模式 | 允许所有操作（危险操作需确认） |
+| `plan` | 只读规划模式 | 仅允许读取，禁止写入和执行 |
 
-### Permission System
+### 权限系统
 
-Three-level permission control:
+系统内置三级权限：
 
-| Level | Description |
-|-------|-------------|
-| `allow` | Execute without confirmation |
-| `deny` | Block execution |
-| `confirm` | Require user confirmation |
+| 级别 | 说明 |
+|------|------|
+| `allow` | 允许执行，无需确认 |
+| `deny` | 禁止执行 |
+| `confirm` | 需要用户确认后执行 |
 
-Default rules:
-- Read operations → Allow
-- Write operations → Confirm
-- Dangerous commands (rm -rf, etc.) → Confirm
+默认规则：
+- 读取操作 → 允许
+- 写入操作 → 需确认
+- 危险命令（rm -rf 等）→ 需确认
 
-### MCP Configuration
+### MCP 配置
 
-Create a `mcp.json` file:
+创建 `mcp.json` 文件：
 
 ```json
 {
@@ -161,85 +161,85 @@ Create a `mcp.json` file:
 }
 ```
 
-Set environment variable:
+设置环境变量：
 ```bash
 CHAOS_CODE_MCP_CONFIG_PATH=mcp.json
 ```
 
-## 🏗️ Project Structure
+## 🏗️ 项目结构
 
 ```
 chaos_code/
-├── cli/                     # CLI commands
-├── agent/                   # Agent core
-├── llm/                     # LLM integration
-├── tools/                   # Tool system
-│   ├── bash.py              # Terminal execution
-│   ├── file_read.py         # File reading
-│   ├── file_write.py        # File writing
-│   ├── file_edit.py         # File editing
-│   ├── glob.py              # File search
-│   └── grep.py              # Content search
-├── permission/              # Permission system
-├── mcp/                     # MCP protocol
-├── tui/                     # TUI interface
-├── session/                 # Session management
-├── config/                  # Configuration
-└── utils/                   # Utilities
+├── cli/                     # CLI 命令
+├── agent/                   # Agent 核心
+├── llm/                     # LLM 集成
+├── tools/                   # 工具系统
+│   ├── bash.py              # 终端命令执行
+│   ├── file_read.py         # 文件读取
+│   ├── file_write.py        # 文件写入
+│   ├── file_edit.py         # 文件编辑
+│   ├── glob.py              # 文件搜索
+│   └── grep.py              # 内容搜索
+├── permission/              # 权限系统
+├── mcp/                     # MCP 协议
+├── tui/                     # TUI 界面
+├── session/                 # 会话管理
+├── config/                  # 配置系统
+└── utils/                   # 工具函数
 ```
 
-## 🔧 Advanced Usage
+## 🔧 高级用法
 
-### Session Management
+### 会话管理
 
 ```python
 from chaos_code.session import SessionManager
 
 manager = SessionManager()
 
-# Create session
-session = manager.create_session(name="Development Discussion")
+# 创建会话
+session = manager.create_session(name="开发讨论")
 
-# Add messages
-session.add_message("user", "Help me analyze the project")
+# 添加消息
+session.add_message("user", "帮我分析项目")
 
-# Save session
+# 保存会话
 manager.save_session(session)
 
-# List historical sessions
+# 列出历史会话
 sessions = manager.list_sessions()
 ```
 
-### Memory System
+### 记忆系统
 
 ```python
 from chaos_code.session import MemoryManager, MemoryType
 
 memory = MemoryManager()
 
-# Add long-term memory
+# 添加长期记忆
 memory.remember(
-    "User prefers Python development",
+    "用户偏好使用 Python 开发",
     memory_type=MemoryType.LONG_TERM,
     importance=8,
     tags=["preference", "language"],
 )
 
-# Search memories
+# 搜索记忆
 results = memory.recall("Python")
 
-# Get Agent context
+# 获取 Agent 上下文
 context = memory.get_context_for_agent()
 ```
 
-### Custom Tools
+### 自定义工具
 
 ```python
 from chaos_code.tools.base import ToolBase, ToolContext, ToolResult
 
 class MyTool(ToolBase):
     name = "my_tool"
-    description = "Custom tool"
+    description = "自定义工具"
     parameters_schema = {
         "type": "object",
         "properties": {
@@ -249,34 +249,35 @@ class MyTool(ToolBase):
     }
 
     async def execute(self, params: dict, context: ToolContext) -> ToolResult:
-        return ToolResult(success=True, output="Result")
+        return ToolResult(success=True, output="结果")
 ```
 
-## 🧪 Testing
+## 🧪 测试
 
 ```bash
-# Run tests
+# 运行测试
 pytest tests/ -v
 
-# With coverage
+# 带覆盖率
 pytest tests/ --cov=chaos_code
 ```
 
-## 📚 Documentation
+## 📚 文档
 
-- [Development Guide](docs/DEVELOPMENT.md) - Detailed architecture and development guide
-- [Highlights](docs/HIGHLIGHTS.md) - Technical highlights
+- [开发文档](docs/DEVELOPMENT.md) - 详细的架构和开发指南
+- [亮点文档](docs/HIGHLIGHTS.md) - 项目技术亮点
+- [README (English)](README_EN.md) - English version
 
-## 🙏 Acknowledgments
+## 🙏 致谢
 
-This project incorporates design elements from the following excellent projects:
+本项目借鉴了以下优秀项目的设计：
 
-| Project | Key Contributions |
-|---------|-------------------|
-| [OpenCode](https://github.com/opencode-ai/opencode) | Agent architecture, tool system, permission control, build/plan mode |
-| [Gemini CLI](https://github.com/google-gemini/gemini-cli) | Tool confirmation mechanism, Subagent architecture |
-| [MS-Agent](https://github.com/microsoft/autogen) | MCP protocol, multi-LLM backend, Memory system |
+| 项目 | 借鉴要点 |
+|------|----------|
+| [OpenCode](https://github.com/opencode-ai/opencode) | Agent 架构、工具系统、权限系统、build/plan 模式 |
+| [Gemini CLI](https://github.com/google-gemini/gemini-cli) | 工具确认机制、Subagent 架构 |
+| [MS-Agent](https://github.com/microsoft/autogen) | MCP 协议、多 LLM 后端、Memory 系统 |
 
-## 📄 License
+## 📄 许可证
 
 MIT License
